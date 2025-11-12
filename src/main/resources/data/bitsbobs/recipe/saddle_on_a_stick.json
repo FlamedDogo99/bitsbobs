@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "saddle_on_a_stick",
+  "category": "equipment",
+  "pattern": [
+    " #",
+    "/ "
+  ],
+  "key": {
+    "#": [
+      "minecraft:saddle"
+    ],
+    "/": [
+      "minecraft:stick"
+    ]
+  },
+  "result": {
+    "id": "bitsbobs:saddle_on_a_stick",
+    "count": 1
+  }
+}

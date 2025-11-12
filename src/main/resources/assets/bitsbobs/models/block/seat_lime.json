@@ -1,0 +1,7 @@
+{
+  "parent": "bitsbobs:block/template_seat",
+  "textures": {
+    "particle": "block/lime_wool",
+    "texture": "entity/bed/lime"
+  }
+}

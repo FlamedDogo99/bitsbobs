@@ -1,0 +1,6 @@
+{
+  "parent": "bitsbobs:block/template_blood_fire",
+  "textures": {
+    "fire": "bitsbobs:block/blood_fire"
+  }
+}

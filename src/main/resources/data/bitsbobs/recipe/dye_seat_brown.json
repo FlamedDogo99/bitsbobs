@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "seat_dye",
+  "ingredients": [
+    "minecraft:brown_dye",
+    [
+      "bitsbobs:seat_black",
+      "bitsbobs:seat_blue",
+      "bitsbobs:seat_cyan",
+      "bitsbobs:seat_gray",
+      "bitsbobs:seat_green",
+      "bitsbobs:seat_light_blue",
+      "bitsbobs:seat_light_gray",
+      "bitsbobs:seat_lime",
+      "bitsbobs:seat_magenta",
+      "bitsbobs:seat_orange",
+      "bitsbobs:seat_pink",
+      "bitsbobs:seat_purple",
+      "bitsbobs:seat_red",
+      "bitsbobs:seat_yellow",
+      "bitsbobs:seat_white"
+    ]
+  ],
+  "result": {
+    "count": 1,
+    "id": "bitsbobs:seat_brown"
+  }
+}

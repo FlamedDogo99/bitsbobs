@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld_rod",
+  "textures": {
+    "layer0": "bitsbobs:item/saddle_on_a_stick"
+  }
+}

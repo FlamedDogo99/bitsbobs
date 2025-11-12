@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "seat",
+  "key": {
+    "#": "minecraft:black_wool",
+    "X": "#minecraft:planks"
+  },
+  "pattern": [
+    "##",
+    "XX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "bitsbobs:seat_black"
+  }
+}

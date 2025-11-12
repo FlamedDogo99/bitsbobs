@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "1": "minecraft:dirt"
+  },
+  "pattern": [
+    "111"
+  ],
+  "result": {
+    "count": 6,
+    "id": "bitsbobs:dirt_slab"
+  }
+}
