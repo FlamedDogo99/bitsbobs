@@ -32,5 +32,10 @@
   "bitsbobs.text.command.group.join": "Joined group \"%1$s\"",
   "bitsbobs.text.command.group.invalid_source": "%1$s cannot invoke %2$s, as it is not a player",
   "bitsbobs.text.command.group.unknown_group": "Unknown group \"%1$s\"",
-  "bitsbobs.text.command.group.cannot_rejoin": "Cannot join a group you are already joined in"
+  "bitsbobs.text.command.group.cannot_rejoin": "Cannot join a group you are already joined in",
+  "bitsbobs.text.command.message_group.no_group": "You are not in a group",
+  "bitsbobs.text.command.message_group.message": "[%1$s] <%2$s> %3$s",
+  "bitsbobs.text.command.group.invite": "You have been invited to %1$s. Type %2$s to join",
+  "bitsbobs.text.command.group.request": "[%1$s] %2$s has requested to join. Type %3$s to invite",
+  "bitsbobs.text.command.group.no_uninvite": "Cannot remove invite for %1$s, as no invite exists"
 }

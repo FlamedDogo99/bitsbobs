@@ -12,6 +12,7 @@ public class ModCommands {
       dispatcher.register(MessageCommands.COMMAND_MESSAGE);
       dispatcher.register(MessageCommands.COMMAND_REPLY);
       dispatcher.register(MessageCommands.COMMAND_GROUP);
+      dispatcher.register(MessageCommands.COMMAND_MESSAGE_GROUP);
     });
   }
 }

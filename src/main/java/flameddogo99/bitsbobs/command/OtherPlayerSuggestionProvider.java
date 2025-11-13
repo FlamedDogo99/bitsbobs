@@ -7,14 +7,15 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.server.command.ServerCommandSource;
 
-import java.util.Collection;
+import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 
-public class PlayerSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+public class OtherPlayerSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
   @Override
   public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
     ServerCommandSource source = context.getSource();
-    Collection<String> playerNames = source.getPlayerNames();
+    TreeSet<String> playerNames = new TreeSet<>(source.getPlayerNames());
+    playerNames.remove(source.getName());
     for (String playerName : playerNames) {
       builder.suggest(playerName);
     }

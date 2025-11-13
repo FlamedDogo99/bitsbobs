@@ -8,18 +8,18 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.util.Collection;
+import java.util.TreeSet;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class PublicGroupProvider implements SuggestionProvider<ServerCommandSource> {
-  private final Collection<String> groups;
-  public PublicGroupProvider(Collection<String> groups) {
-    this.groups = groups;
-  }
+public class InvitePlayerSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
   @Override
   public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-    for (String group : groups) {
-      builder.suggest(group);
+    ServerCommandSource source = context.getSource();
+    if(source.getPlayer() == null) return builder.buildFuture();
+    for (UUID playerUUID : new TreeSet<>(MessageGroupManager.getGroup(source.getPlayer()).getInvites())) {
+      ServerPlayerEntity player = source.getServer().getPlayerManager().getPlayer(playerUUID);
+      if(player != null) builder.suggest(player.getNameForScoreboard());
     }
     return builder.buildFuture();
   }
