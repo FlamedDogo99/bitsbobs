@@ -1,22 +1,16 @@
 package flameddogo99.bitsbobs.item;
 
-import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import flameddogo99.bitsbobs.BitsBobs;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
-import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
-
-import java.util.ArrayList;
-import java.util.function.Function;
 
 public class ModItems {
   public static final Item SADDLE_ON_A_STICK = registerItem("saddle_on_a_stick", new SaddleOnAStickItem(

@@ -21,5 +21,16 @@
   "item.bitsbobs.seat_light_gray": "Light Gray Seat",
   "item.bitsbobs.seat_gray": "Gray Seat",
   "item.bitsbobs.seat_black": "Black Seat",
-  "item.bitsbobs.seat_brown": "Brown Seat"
+  "item.bitsbobs.seat_brown": "Brown Seat",
+  "bitsbobs.text.command.reply.empty": "No player to reply to",
+  "bitsbobs.text.command.message.invalid_source": "%1$s cannot invoke %2$s, as it is not a player",
+  "bitsbobs.text.command.message.send": "[To %1$s]: %2$s",
+  "bitsbobs.text.command.message.receive": "[From %1$s]: %2$s",
+  "bitsbobs.text.command.message.hover": "Click to reply to %1$s",
+  "bitsbobs.text.command.group.left": "Left the current message group",
+  "bitsbobs.text.command.group.create": "Created group \"%1$s\"",
+  "bitsbobs.text.command.group.join": "Joined group \"%1$s\"",
+  "bitsbobs.text.command.group.invalid_source": "%1$s cannot invoke %2$s, as it is not a player",
+  "bitsbobs.text.command.group.unknown_group": "Unknown group \"%1$s\"",
+  "bitsbobs.text.command.group.cannot_rejoin": "Cannot join a group you are already joined in"
 }

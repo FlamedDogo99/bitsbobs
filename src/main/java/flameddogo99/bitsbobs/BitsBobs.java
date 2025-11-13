@@ -2,6 +2,7 @@ package flameddogo99.bitsbobs;
 
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import flameddogo99.bitsbobs.block.ModBlocks;
+import flameddogo99.bitsbobs.command.ModCommands;
 import flameddogo99.bitsbobs.entity.ModEntities;
 import flameddogo99.bitsbobs.item.ModItems;
 import net.fabricmc.api.ModInitializer;
@@ -25,10 +26,11 @@ public class BitsBobs implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-    PolymerResourcePackUtils.markAsRequired();
     PolymerResourcePackUtils.addModAssets(MOD_ID);
+    PolymerResourcePackUtils.markAsRequired();
     ModItems.registerModItems();
     ModBlocks.registerModBlocks();
     ModEntities.registerModEntities();
+    ModCommands.registerModCommands();
 	}
 }
