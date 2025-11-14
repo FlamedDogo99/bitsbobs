@@ -31,7 +31,7 @@ public class MessageGroup {
     return members.contains(playerUUID);
   }
   public boolean hasInvite(UUID playerUUID) {
-    return members.contains(playerUUID);
+    return invites.contains(playerUUID);
   }
   public void setName(String name) {
     this.name = name;

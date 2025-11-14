@@ -26,7 +26,7 @@ public class AccessibleGroupProvider implements SuggestionProvider<ServerCommand
       Collection<String> invites = MessageGroupManager.getInvites(source);
       sortedResults.addAll(invites);
     }
-    if(showPublic) sortedResults.addAll(MessageGroupManager.getGroups());
+    if(showPublic) sortedResults.addAll(MessageGroupManager.getPublicGroups());
     for (String name : sortedResults) {
       builder.suggest(name);
     }

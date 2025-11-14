@@ -11,6 +11,7 @@ public class MessageGroupManager {
   private static final HashMap<String, MessageGroup> nameToGroupMap = new HashMap<>();
   private static final HashMap<UUID, String> playerToNameMap = new HashMap<>();
   private static final HashMap<UUID, Collection<String>> playerToInvitesMap = new HashMap<>();
+  private static final HashSet<String> publicGroups = new HashSet<>();
 
   public static MessageGroup getGroup(ServerPlayerEntity source) {
     String groupName = playerToNameMap.get(source.getUuid());
@@ -24,6 +25,9 @@ public class MessageGroupManager {
   }
   public static Collection<String> getGroups() {
     return nameToGroupMap.keySet();
+  }
+  public static Collection<String> getPublicGroups() {
+    return publicGroups;
   }
 
   public static void addInvite(UUID playerUUID, MessageGroup group) {
@@ -47,6 +51,7 @@ public class MessageGroupManager {
     String groupName = playerToNameMap.get(playerUUID);
     MessageGroup group = nameToGroupMap.get(groupName);
     if(group != null) {
+      playerToNameMap.remove(playerUUID);
       group.remove(playerUUID);
       if(group.size() == 0) removeGroup(group);
     }
@@ -59,10 +64,12 @@ public class MessageGroupManager {
       playerToInvitesMap.remove(playerUUID);
       group.removeInvite(playerUUID);
     }
+    publicGroups.remove(group.getName());
     nameToGroupMap.remove(group.getName());
   }
   public static void addGroup(String name, boolean isPrivate) {
     MessageGroup group = new MessageGroup(name, isPrivate);
+    if(!isPrivate) publicGroups.add(group.getName());
     nameToGroupMap.put(name, group);
   }
   public static void joinGroup(ServerPlayerEntity player, String name) {
@@ -71,6 +78,7 @@ public class MessageGroupManager {
       leaveGroup(player);
       removeInvite(player, group);
       playerToNameMap.put(player.getUuid(), group.getName());
+      group.add(player.getUuid());
     }
   }
 

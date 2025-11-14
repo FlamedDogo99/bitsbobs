@@ -9,12 +9,14 @@ import flameddogo99.bitsbobs.util.TextUtil;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.MessageArgumentType;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.*;
 
@@ -93,17 +95,24 @@ public class MessageCommands {
     source.sendMessage(Text.translatable("bitsbobs.text.command.message.send", TextUtil.getFormattedName(target), message));
     target.sendMessage(Text.translatable("bitsbobs.text.command.message.receive", sourceName, message));
   }
-  public static void sendGroupMessage(ServerPlayerEntity target, Text message, MessageGroup group) {
-    target.sendMessage(Text.translatable("bitsbobs.text.command.message_group.message", group.getName(), TextUtil.getFormattedName(target), message));
+  public static void sendGroupMessage(PlayerManager playerManager, Text message, MessageGroup group) {
+    for(UUID targetUUID : group.getMembers()) {
+      ServerPlayerEntity target = playerManager.getPlayer(targetUUID);
+      if(target == null) {
+        MessageGroupManager.leaveGroup(targetUUID);
+        continue;
+      }
+      target.sendMessage(message);
+    }
   }
   public static void sendInviteMessage(ServerPlayerEntity target, MessageGroup group) {
-    String command = "/" + COMMAND_GROUP_INITIATOR + " " + "join" + " " + group.getName();
+    String commandString = "/" + COMMAND_GROUP_INITIATOR + " " + "join" + " " + group.getName();
+    Text command = Text.literal(commandString)
+            .styled(style -> style
+                    .withColor(Formatting.YELLOW)
+                    .withClickEvent(new ClickEvent.SuggestCommand(commandString))
+            );
     target.sendMessage(Text.translatable("bitsbobs.text.command.group.invite", group.getName(), command));
-  }
-  public static void sendInviteRequest(ServerPlayerEntity target, MessageGroup group) {
-    String command = "/" + COMMAND_GROUP_INITIATOR + " " + "invite" + " " + target.getNameForScoreboard();
-    target.sendMessage(Text.translatable("bitsbobs.text.command.group.request", group.getName(), group.getName(), command));
-
   }
 
   private static int messageCommand(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -146,6 +155,11 @@ public class MessageCommands {
       source.sendError(Text.translatable("bitsbobs.text.command.group.duplicate_group", source.getName()));
       return 0;
     }
+    MessageGroup sourceGroup = MessageGroupManager.getGroup(source.getPlayer());
+    if(sourceGroup != null) {
+      Text groupMessage = Text.translatable("bitsbobs.text.command.group.player_left", sourceGroup.getName(), TextUtil.getFormattedName(source.getPlayer()));
+      sendGroupMessage(source.getServer().getPlayerManager(), groupMessage, sourceGroup);
+    }
 
     MessageGroupManager.addGroup(name, isPrivate);
     MessageGroupManager.joinGroup(source.getPlayer(), name);
@@ -160,20 +174,36 @@ public class MessageCommands {
       return 0;
     }
     String name = StringArgumentType.getString(context, "name");
-    if(MessageGroupManager.getGroup(name) == null) {
-      source.sendError(Text.translatable("bitsbobs.text.command.group.unknown_group", source.getName()));
+    MessageGroup targetGroup = MessageGroupManager.getGroup(name);
+    if(targetGroup == null) {
+      source.sendError(Text.translatable("bitsbobs.text.command.group.unknown_group", name));
       return 0;
     }
-    MessageGroup group = MessageGroupManager.getGroup(source.getPlayer());
-    if(group.getIsPrivate() && !group.hasInvite(source.getPlayer().getUuid())) {
-      sendInviteRequest(source.getPlayer(), group);
-      source.sendError(Text.translatable("bitsbobs.text.command.group.unknown_group", source.getName()));
+    if(targetGroup.getIsPrivate() && !targetGroup.hasInvite(source.getPlayer().getUuid())) {
+      String commandString = "/" + COMMAND_GROUP_INITIATOR + " invite add " + source.getPlayer().getNameForScoreboard();
+      Text command = Text.literal(commandString)
+              .styled(style -> style
+                      .withColor(Formatting.YELLOW)
+                      .withClickEvent(new ClickEvent.SuggestCommand(commandString))
+              );
+      Text groupMessage = Text.translatable("bitsbobs.text.command.group.request", targetGroup.getName(), TextUtil.getFormattedName(source.getPlayer()), command);
+      sendGroupMessage(source.getServer().getPlayerManager(), groupMessage, targetGroup);
+      source.sendError(Text.translatable("bitsbobs.text.command.group.unknown_group", targetGroup.getName()));
       return 0;
     }
-    if(Objects.equals(group.getName(), name)) {
+    MessageGroup sourceGroup = MessageGroupManager.getGroup(source.getPlayer());
+    if(sourceGroup != null && Objects.equals(sourceGroup.getName(), name)) {
       source.sendError(Text.translatable("bitsbobs.text.command.group.cannot_rejoin", source.getName()));
       return 0;
     }
+    if(sourceGroup != null) {
+      Text groupMessage = Text.translatable("bitsbobs.text.command.group.player_left", sourceGroup.getName(), TextUtil.getFormattedName(source.getPlayer()));
+      sendGroupMessage(source.getServer().getPlayerManager(), groupMessage, sourceGroup);
+    }
+
+    Text groupMessage = Text.translatable("bitsbobs.text.command.group.player_joined", targetGroup.getName(), TextUtil.getFormattedName(source.getPlayer()));
+    sendGroupMessage(source.getServer().getPlayerManager(), groupMessage, targetGroup);
+
     MessageGroupManager.joinGroup(source.getPlayer(), name);
     source.sendMessage(Text.translatable("bitsbobs.text.command.group.joined", name));
     return 1;
@@ -184,8 +214,15 @@ public class MessageCommands {
       source.sendError(Text.translatable("bitsbobs.text.command.group.invalid_source", source.getName()));
       return 0;
     }
+    MessageGroup group = MessageGroupManager.getGroup(source.getPlayer());
+    if(group == null) {
+      source.sendError(Text.translatable("bitsbobs.text.command.group.invalid_leave"));
+      return 0;
+    }
+    Text groupMessage = Text.translatable("bitsbobs.text.command.group.player_left", group.getName(), TextUtil.getFormattedName(source.getPlayer()));
+    sendGroupMessage(source.getServer().getPlayerManager(), groupMessage, group);
+
     MessageGroupManager.leaveGroup(source.getPlayer());
-    source.sendMessage(Text.translatable("bitsbobs.text.command.group.left"));
     return 1;
   }
 
@@ -202,14 +239,8 @@ public class MessageCommands {
       return 0;
     }
     Text message = MessageArgumentType.getMessage(context, "message");
-    for(UUID targetUUID : group.getMembers()) {
-      ServerPlayerEntity target = source.getServer().getPlayerManager().getPlayer(targetUUID);
-      if(target == null) {
-        MessageGroupManager.leaveGroup(targetUUID);
-        continue;
-      }
-      sendGroupMessage(target, message, group);
-    }
+    Text groupMessage = Text.translatable("bitsbobs.text.command.message_group.message", group.getName(), TextUtil.getFormattedName(source.getPlayer()), message);
+    sendGroupMessage(source.getServer().getPlayerManager(), groupMessage, group);
     return 1;
   }
 
@@ -229,6 +260,9 @@ public class MessageCommands {
       source.sendError(Text.translatable("bitsbobs.text.command.group.duplicate_player"));
       return 0;
     }
+    Text groupMessage = Text.translatable("bitsbobs.text.command.group.player_invited", group.getName(), TextUtil.getFormattedName(source.getPlayer()),TextUtil.getFormattedName(target));
+    sendGroupMessage(source.getServer().getPlayerManager(), groupMessage, group);
+
     MessageGroupManager.addInvite(target.getUuid(), group);
     sendInviteMessage(target, group);
     return 1;
@@ -249,6 +283,9 @@ public class MessageCommands {
       source.sendError(Text.translatable("bitsbobs.text.command.group.no_uninvite", TextUtil.getFormattedName(target)));
       return 0;
     }
+    Text groupMessage = Text.translatable("bitsbobs.text.command.group.remove_invite", group.getName(), TextUtil.getFormattedName(source.getPlayer()), TextUtil.getFormattedName(target));
+    sendGroupMessage(source.getServer().getPlayerManager(), groupMessage, group);
+
     MessageGroupManager.removeInvite(target, group);
     return 1;
   }
