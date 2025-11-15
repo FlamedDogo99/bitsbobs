@@ -23,9 +23,7 @@ public class MessageGroupManager {
   public static Collection<String> getInvites(ServerPlayerEntity source) {
     return playerToInvitesMap.getOrDefault(source.getUuid(), new HashSet<>());
   }
-  public static Collection<String> getGroups() {
-    return nameToGroupMap.keySet();
-  }
+
   public static Collection<String> getPublicGroups() {
     return publicGroups;
   }

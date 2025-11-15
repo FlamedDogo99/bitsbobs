@@ -5,10 +5,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import flameddogo99.bitsbobs.command.suggestion.*;
 import flameddogo99.bitsbobs.util.TextUtil;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.MessageArgumentType;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -22,10 +22,10 @@ import java.util.*;
 
 public class MessageCommands {
 
-  private static final String COMMAND_MESSAGE_INITIATOR = "m";
-  private static final String COMMAND_REPLY_INITIATOR = "r";
-  private static final String COMMAND_GROUP_INITIATOR = "g";
-  private static final String COMMAND_MESSAGE_GROUP_INITIATOR = "mg";
+  private static final String COMMAND_MESSAGE_INITIATOR = "message";
+  private static final String COMMAND_REPLY_INITIATOR = "reply";
+  private static final String COMMAND_GROUP_INITIATOR = "group";
+  private static final String COMMAND_MESSAGE_GROUP_INITIATOR = "message-group";
 
   private static final HashMap<UUID, UUID> replyMap = new HashMap<>();
 
